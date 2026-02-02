@@ -5,7 +5,14 @@ import { Navigate } from "react-router";
 
 function AuthProvider() {
   const isLoggedIn = useStore(useLoginState, (state) => state.isLoggedIn);
-  return isLoggedIn ? <Outlet /> : <Navigate to={"/login"} />;
+  return isLoggedIn ? (
+    <Outlet />
+  ) : (
+    <>
+      <Outlet />
+      <Navigate to={"login"} />
+    </>
+  );
 }
 
 export default AuthProvider;

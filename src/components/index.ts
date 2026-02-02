@@ -1,4 +1,3 @@
-import Footer from "./footer/Footer";
 import Header from "./header/Header";
 import Upload from "./header/Upload";
 import UploadInfo from "./header/UploadInfo";
@@ -18,6 +17,5 @@ export {
   Upload,
   UploadInfo,
   Header,
-  Footer,
   AuthProvider,
 };

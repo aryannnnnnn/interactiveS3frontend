@@ -13,7 +13,18 @@ import {
 import App from "./App";
 
 export const routes = createBrowserRouter([
-  { index: true, Component: App },
-  { path: "/", Component: Files },
-  { path: "login", Component: Login },
+  {
+    path: "/",
+    Component: App,
+    children: [
+      {
+        path: "login",
+        Component: Login,
+      },
+      {
+        path: "files",
+        Component: Files,
+      },
+    ],
+  },
 ]);

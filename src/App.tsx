@@ -1,5 +1,4 @@
 import Header from "./components/header/Header";
-import Footer from "./components/footer/Footer";
 import { AuthProvider } from "./components";
 
 function App() {
@@ -7,7 +6,6 @@ function App() {
     <>
       <Header />
       <AuthProvider />
-      <Footer />
     </>
   );
 }
