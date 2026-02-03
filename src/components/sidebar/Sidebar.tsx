@@ -4,11 +4,14 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarHeader,
+  SidebarTrigger,
 } from "@/components/ui/sidebar";
 function AppSidebar() {
   return (
     <Sidebar>
-      <SidebarHeader>Settings</SidebarHeader>
+      <SidebarHeader className="flex flex-row justify-between">
+        <span>Settings</span> <SidebarTrigger />
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup />
         <SidebarGroup />

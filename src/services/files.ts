@@ -8,12 +8,15 @@ import type {
 } from "@/interfaces/request";
 
 class files {
-  async getBuckets() {
+  async getBuckets(token: string) {
     try {
       const resp = await fetchData({
         url: config.url,
         path: "/get-buckets",
         method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
       return resp;
     } catch (e) {

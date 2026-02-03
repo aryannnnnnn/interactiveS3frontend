@@ -1,22 +1,44 @@
-import { useStore } from "zustand";
-import { useFileStore } from "../../store/useFileStore";
-import { Button } from "../ui/button";
 import { SidebarTrigger } from "../ui/sidebar";
+import { Input } from "../ui/input";
+import { Field } from "../ui/field";
+import { Button } from "../ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+  DialogHeader,
+} from "../ui/dialog";
+import { FieldLabel, FieldDescription } from "../../components/ui/field";
 
 function Header() {
-  const bucketName = useStore(useFileStore, (state) => state.bucketName);
-  const region = useStore(useFileStore, (state) => state.region);
   return (
-    <header className="flex flex-row justify-between h-15 bg-gray-700">
-      <SidebarTrigger />
-      <div className="w-1/4 flex justify-center self-center">{bucketName}</div>
-      <div className="w-2/4 flex justify-center self-center">
-        <span>{region}</span>
-      </div>
-      <div className="w-1/4 self-center flex justify-center">
-        <Button name="upload">Upload</Button>
-      </div>
-    </header>
+    <div>
+      <header className="w-full flex-1 h-15 bg-red-200">
+        <div className="flex justify-between gap-20">
+          <SidebarTrigger />
+          <Field orientation="horizontal">
+            <Input type="search" placeholder="Search..." />
+            <Button>Search</Button>
+          </Field>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="outline">Upload</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-sm">
+              <DialogHeader>
+                <DialogTitle>Upload New File</DialogTitle>
+              </DialogHeader>
+              <Field>
+                <FieldLabel htmlFor="picture">Picture</FieldLabel>
+                <Input id="picture" type="file" />
+                <FieldDescription>Select a picture to upload.</FieldDescription>
+              </Field>
+            </DialogContent>
+          </Dialog>
+        </div>
+      </header>
+    </div>
   );
 }
 export default Header;

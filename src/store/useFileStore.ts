@@ -3,7 +3,13 @@ import { combine } from "zustand/middleware";
 
 export const useFileStore = create(
   combine(
-    { prefix: "", delimeter: "/", bucketName: "None", region: "XYZ" },
+    {
+      prefix: "",
+      delimeter: "/",
+      selectedBucketName: "None",
+      region: "XYZ",
+      availBuckets: [""],
+    },
     (set) => {
       return {
         setPrefix: (p: string) => {
@@ -11,11 +17,14 @@ export const useFileStore = create(
             prefix: state.prefix + p,
           }));
         },
-        setBucketName: (bn: string) => {
-          set({ bucketName: bn });
+        setSelectedBucketName: (bn: string) => {
+          set({ selectedBucketName: bn });
         },
         setRegion: (rg: string) => {
           set({ region: rg });
+        },
+        setAvailBuckets: (buckets: string[]) => {
+          set({ availBuckets: buckets });
         },
       };
     },
