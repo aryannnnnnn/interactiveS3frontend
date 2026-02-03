@@ -5,12 +5,12 @@ import Login from "./auth/Login";
 import Logout from "./auth/Logout";
 import Files from "./files/Files";
 import FileInfo from "./files/FileInfo";
-import Sidebar from "./sidebar/Sidebar";
+import Appsidebar from "./sidebar/Sidebar";
 import AuthProvider from "./auth/AuthProvider";
 
 export {
   FileInfo,
-  Sidebar,
+  Appsidebar,
   Files,
   Logout,
   Login,
