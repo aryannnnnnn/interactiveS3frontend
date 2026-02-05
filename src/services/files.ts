@@ -24,7 +24,7 @@ class files {
     }
   }
 
-  async getFiles({ bucketName, prefix, delimeter }: IGetFiles) {
+  async getFiles({ bucketName, prefix, delimeter }: IGetFiles, token: string) {
     try {
       if (!prefix) prefix = "";
       if (!delimeter) delimeter = "/";
@@ -33,6 +33,7 @@ class files {
         path: "/files",
         method: "GET",
         query: { bucketName, prefix, delimeter },
+        headers: { Authorization: `Bearer ${token}` },
       });
       return resp;
     } catch (e) {

@@ -24,7 +24,7 @@ export const useFileStore = create(
           set({ region: rg });
         },
         setAvailBuckets: (buckets: string[]) => {
-          set({ availBuckets: buckets });
+          set(() => ({ availBuckets: buckets }));
         },
       };
     },

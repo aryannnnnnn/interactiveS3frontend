@@ -10,28 +10,41 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useState, useRef } from "react";
 import { authProvider } from "../../services/authService";
+import { useStore } from "zustand";
+import { useLoginState } from "../../store/useLoginStore";
+import { useNavigate } from "react-router";
 
 function Login() {
   const [secretToken, setSecretToken] = useState<string>("");
   const [accessKey, setAccessKey] = useState<string>("");
   const [username, setUsername] = useState<string>("");
   const [region, setRegion] = useState<string>("");
-  const submitButton = useRef<HTMLElement | null>(null);
+  const submitButton = useRef<HTMLButtonElement | null>(null);
+  const setToken = useStore(useLoginState, (state) => state.setToken);
+  const navigate = useNavigate();
 
   const submitCredentials = async () => {
     if (submitButton.current) {
       submitButton.current.setAttribute("disabled", "true");
     }
-    const resp = await authProvider.getToken({
-      username,
-      region,
-      accessToken: accessKey,
-      secretAccessKey: secretToken,
-    });
+    try {
+      const resp = await authProvider.getToken({
+        username,
+        region,
+        accessToken: accessKey,
+        secretAccessKey: secretToken,
+      });
+      if (resp.token) {
+        console.log(resp.token);
+        setToken(resp.token);
+        navigate({ pathname: "/" });
+      }
+    } catch (e) {
+      console.error(e);
+    }
     if (submitButton.current) {
       submitButton.current.removeAttribute("disabled");
     }
-    console.log(resp);
   };
 
   return (

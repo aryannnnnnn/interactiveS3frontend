@@ -2,22 +2,25 @@ import Header from "./components/header/Header";
 import { AuthProvider } from "./components";
 import AppSidebar from "./components/sidebar/Sidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
+import { ThemeProvider } from "./components/theme/theme-provider";
 
 function App() {
   return (
-    <SidebarProvider>
-      <div className="flex flex-col min-h-screen w-full">
-        <Header />
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <SidebarProvider>
+        <div className="flex flex-col min-h-screen w-full">
+          <Header />
 
-        <div className="flex flex-1 overflow-hidden">
-          <AppSidebar />
+          <div className="flex flex-1 overflow-hidden">
+            <AppSidebar />
 
-          <main className="flex-1 overflow-y-auto">
-            <AuthProvider />
-          </main>
+            <main className="flex-1 overflow-y-auto">
+              <AuthProvider />
+            </main>
+          </div>
         </div>
-      </div>
-    </SidebarProvider>
+      </SidebarProvider>
+    </ThemeProvider>
   );
 }
 

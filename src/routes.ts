@@ -22,7 +22,8 @@ export const routes = createBrowserRouter([
         Component: Login,
       },
       {
-        path: "files",
+        index: true,
+        // : "files",
         Component: Files,
       },
     ],
