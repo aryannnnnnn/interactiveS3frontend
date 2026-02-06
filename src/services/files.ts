@@ -6,10 +6,12 @@ import type {
   IViewFiles,
   IUploadFile,
 } from "@/interfaces/request";
+import { useLoginState } from "@/store/useLoginStore";
 
 class files {
-  async getBuckets(token: string) {
+  async getBuckets() {
     try {
+      const token = useLoginState.getState().token;
       const resp = await fetchData({
         url: config.url,
         path: "/get-buckets",
@@ -24,8 +26,9 @@ class files {
     }
   }
 
-  async getFiles({ bucketName, prefix, delimeter }: IGetFiles, token: string) {
+  async getFiles({ bucketName, prefix, delimeter }: IGetFiles) {
     try {
+      const token = useLoginState.getState().token;
       if (!prefix) prefix = "";
       if (!delimeter) delimeter = "/";
       const resp = await fetchData({
@@ -43,11 +46,13 @@ class files {
 
   async deleteFile({ bucketName, key }: IDeleteFile) {
     try {
+      const token = useLoginState.getState().token;
       const resp = await fetchData({
         url: config.url,
         path: "/delete-file",
         method: "DELETE",
         query: { bucketName, key },
+        headers: { Authorization: `Bearer ${token}` },
       });
       return resp;
     } catch (e) {
@@ -57,11 +62,15 @@ class files {
 
   async viewFile({ bucketName, files }: IViewFiles) {
     try {
+      const token = useLoginState.getState().token;
       const resp = await fetchData({
         url: config.url,
         path: "/view-file",
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ bucketName, files }),
       });
       return resp;
@@ -72,11 +81,15 @@ class files {
 
   async uploadFile({ bucketName, files }: IUploadFile) {
     try {
+      const token = useLoginState.getState().token;
       const resp = await fetchData({
         url: config.url,
         path: "/get-upload-file-url",
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify({ bucketName, files }),
       });
       return resp;

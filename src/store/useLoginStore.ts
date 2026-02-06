@@ -5,16 +5,22 @@ export const useLoginState = create(
   combine({ token: "", isLoggedIn: false }, (set) => {
     return {
       setToken: (newToken: string) => {
-        set(() => ({
-          token: newToken,
-          isLoggedIn: true,
-        }));
+        set(() => {
+          localStorage.setItem("token", newToken);
+          return {
+            token: newToken,
+            isLoggedIn: true,
+          };
+        });
       },
       unsetToken: () => {
-        set(() => ({
-          token: "",
-          isLoggedIn: false,
-        }));
+        set(() => {
+          localStorage.removeItem("token");
+          return {
+            token: "",
+            isLoggedIn: false,
+          };
+        });
       },
     };
   }),

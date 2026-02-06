@@ -6,8 +6,8 @@ export const useFileStore = create(
     {
       prefix: "",
       delimeter: "/",
-      selectedBucketName: "None",
-      region: "XYZ",
+      selectedBucketName: "",
+      region: "",
       availBuckets: [""],
     },
     (set) => {
