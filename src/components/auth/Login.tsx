@@ -8,32 +8,26 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState, useRef } from "react";
 import { authProvider } from "../../services/authService";
 import { useStore } from "zustand";
 import { useLoginState } from "../../store/useLoginStore";
 import { useNavigate } from "react-router";
+import { useForm } from "react-hook-form";
+import type { ILogin } from "@/interfaces/login";
 
 function Login() {
-  const [secretToken, setSecretToken] = useState<string>("");
-  const [accessKey, setAccessKey] = useState<string>("");
-  const [username, setUsername] = useState<string>("");
-  const [region, setRegion] = useState<string>("");
-  const submitButton = useRef<HTMLButtonElement | null>(null);
   const setToken = useStore(useLoginState, (state) => state.setToken);
   const navigate = useNavigate();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<ILogin>({});
 
-  const submitCredentials = async () => {
-    if (submitButton.current) {
-      submitButton.current.setAttribute("disabled", "true");
-    }
+  const submitCredentials = async (data: ILogin) => {
     try {
-      const resp = await authProvider.getToken({
-        username,
-        region,
-        accessToken: accessKey,
-        secretAccessKey: secretToken,
-      });
+      console.log(data);
+      const resp = await authProvider.getToken(data);
       if (resp.token) {
         console.log(resp.token);
         setToken(resp.token);
@@ -41,9 +35,6 @@ function Login() {
       }
     } catch (e) {
       console.error(e);
-    }
-    if (submitButton.current) {
-      submitButton.current.removeAttribute("disabled");
     }
   };
 
@@ -58,43 +49,59 @@ function Login() {
         </CardHeader>
         <CardContent>
           <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              submitCredentials();
-            }}
+            onSubmit={handleSubmit(submitCredentials)}
             className="flex flex-col gap-2"
           >
             <Label htmlFor="secretToken">Secret Token</Label>
             <Input
-              onChange={(e) => setSecretToken(e.target.value)}
-              value={secretToken}
               type="text"
+              {...register("secretAccessKey", {
+                required: "Secret Key is required",
+              })}
               id="secretToken"
             />
+            {errors.secretAccessKey && (
+              <p className="text-red-500">{errors.secretAccessKey.message}</p>
+            )}
             <Label htmlFor="accessKey">Access Key</Label>
             <Input
-              value={accessKey}
-              onChange={(e) => setAccessKey(e.target.value)}
               type="text"
+              {...register("accessToken", {
+                required: "Access Token is required",
+              })}
               id="accessKey"
             />
+            {errors.secretAccessKey && (
+              <p className="text-red-500">{errors.secretAccessKey.message}</p>
+            )}
             <Label htmlFor="region">Region</Label>
             <Input
-              value={region}
-              onChange={(e) => setRegion(e.target.value)}
               type="text"
+              {...register("region", {
+                required: "Region is required",
+              })}
               id="region"
             />
+            {errors.region && (
+              <p className="text-red-500">{errors.region.message}</p>
+            )}
             <Label htmlFor="username">Username</Label>
             <Input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
               type="text"
+              {...register("username", {
+                required: "Username is required",
+              })}
               id="username"
             />
-            <Button type="submit" ref={submitButton} className="w-full">
+            {errors.username && (
+              <p className="text-red-500">{errors.username.message}</p>
+            )}
+            <Button type="submit" className="w-full">
               Login
             </Button>
+            {errors.root && (
+              <p className="text-red-500">{errors.root.message}</p>
+            )}
           </form>
         </CardContent>
       </Card>

@@ -13,8 +13,8 @@ export const useFileStore = create(
     (set) => {
       return {
         setPrefix: (p: string) => {
-          set((state) => ({
-            prefix: state.prefix + p,
+          set(() => ({
+            prefix: p,
           }));
         },
         setSelectedBucketName: (bn: string) => {

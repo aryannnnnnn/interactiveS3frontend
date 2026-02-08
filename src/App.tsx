@@ -3,6 +3,7 @@ import { AuthProvider } from "./components";
 import AppSidebar from "./components/sidebar/Sidebar";
 import { SidebarProvider } from "./components/ui/sidebar";
 import { ThemeProvider } from "./components/theme/theme-provider";
+import { Toaster } from "sonner";
 
 function App() {
   return (
@@ -20,6 +21,7 @@ function App() {
           </div>
         </div>
       </SidebarProvider>
+      <Toaster />
     </ThemeProvider>
   );
 }

@@ -5,6 +5,7 @@ import type {
   IDeleteFile,
   IViewFiles,
   IUploadFile,
+  IDownloadFile,
 } from "@/interfaces/request";
 import { useLoginState } from "@/store/useLoginStore";
 
@@ -61,6 +62,25 @@ class files {
   }
 
   async viewFile({ bucketName, files }: IViewFiles) {
+    try {
+      const token = useLoginState.getState().token;
+      const resp = await fetchData({
+        url: config.url,
+        path: "/view-file",
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ bucketName, files }),
+      });
+      return resp;
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  async downloadFile({ bucketName, files }: IDownloadFile) {
     try {
       const token = useLoginState.getState().token;
       const resp = await fetchData({

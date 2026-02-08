@@ -22,7 +22,7 @@ export interface IViewFiles {
   bucketName: string;
   files: {
     key: string;
-    expiresIn: number;
+    expiresIn?: number;
   }[];
 }
 
@@ -31,6 +31,14 @@ export interface IUploadFile {
   files: {
     key: string;
     contentType: string;
-    expiresIn: number;
+    expiresIn?: number;
+  }[];
+}
+
+export interface IDownloadFile {
+  bucketName: string;
+  files: {
+    key: string;
+    expiresIn?: number;
   }[];
 }

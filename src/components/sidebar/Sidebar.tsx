@@ -70,6 +70,7 @@ function AppSidebar() {
                         <SidebarMenuButton asChild>
                           <span
                             onClick={() => changeSelectedBucket(item.title)}
+                            onKeyDown={() => changeSelectedBucket(item.title)}
                           >
                             {item.title}
                           </span>
