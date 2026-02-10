@@ -20,6 +20,13 @@ import {
 import { Button } from "../ui/button";
 import { Download, Folder, Trash, Info, View } from "lucide-react";
 import { toast } from "sonner";
+import {
+  Breadcrumb,
+  BreadcrumbItem,
+  BreadcrumbLink,
+  BreadcrumbList,
+  BreadcrumbSeparator,
+} from "@/components/ui/breadcrumb";
 
 function Files() {
   const location = useLocation();
@@ -82,6 +89,26 @@ function Files() {
 
   return (
     <div className="flex flex-col gap-2">
+      <div>
+        <Breadcrumb>
+          <BreadcrumbList>
+            {prefix.split("/").map((item, index) => {
+              return (
+                <>
+                  {index !== 0 ? <BreadcrumbSeparator /> : null}
+                  <BreadcrumbItem>
+                    <BreadcrumbLink
+                      onClick={() => changeParent(prefix.split(item)[0])}
+                    >
+                      {item}
+                    </BreadcrumbLink>
+                  </BreadcrumbItem>
+                </>
+              );
+            })}
+          </BreadcrumbList>
+        </Breadcrumb>
+      </div>
       {folders?.map((folder) => {
         return (
           <Item key={folder.name} variant={"outline"}>
