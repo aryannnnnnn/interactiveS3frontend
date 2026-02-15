@@ -18,7 +18,7 @@ import {
   ItemActions,
 } from "../ui/item";
 import { Button } from "../ui/button";
-import { Download, Folder, Trash, Info, View } from "lucide-react";
+import { Download, Folder, Trash, Info, View, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
 import {
   Breadcrumb,
@@ -40,6 +40,7 @@ function Files() {
   const isLoggedIn = useStore(useLoginState, (state) => state.isLoggedIn);
   const [files, setFiles] = useState<files[] | null>();
   const [folders, setFolders] = useState<files[] | null>();
+  const [getFilesTrriger, setGetFilesTrriger] = useState<boolean>(false);
 
   useEffect(() => {
     if (location.pathname === "/" && isLoggedIn) {
@@ -56,7 +57,7 @@ function Files() {
           setFolders(data.data.folders);
         });
     }
-  }, [selectedBucket, location.pathname, prefix]);
+  }, [selectedBucket, location.pathname, prefix, getFilesTrriger]);
 
   const deleteFile = async (filename: string) => {
     const resp = await filesProvider.deleteFile({
@@ -89,16 +90,23 @@ function Files() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div>
+      <div className="flex justify-between">
         <Breadcrumb>
           <BreadcrumbList>
-            {prefix.split("/").map((item, index) => {
+            <BreadcrumbItem>
+              <BreadcrumbList onClick={() => changeParent("")}>
+                {"/"}
+              </BreadcrumbList>
+            </BreadcrumbItem>
+            {prefix.split("/").map((item) => {
               return (
                 <>
-                  {index !== 0 ? <BreadcrumbSeparator /> : null}
+                  <BreadcrumbSeparator />{" "}
                   <BreadcrumbItem>
                     <BreadcrumbLink
-                      onClick={() => changeParent(prefix.split(item)[0])}
+                      onClick={() =>
+                        changeParent(`${prefix.split(item)[0]}${item}/`)
+                      }
                     >
                       {item}
                     </BreadcrumbLink>
@@ -108,6 +116,11 @@ function Files() {
             })}
           </BreadcrumbList>
         </Breadcrumb>
+        <div>
+          <Button onClick={() => setGetFilesTrriger((state) => !state)}>
+            <RefreshCw />
+          </Button>
+        </div>
       </div>
       {folders?.map((folder) => {
         return (
