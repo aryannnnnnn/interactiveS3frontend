@@ -85,7 +85,7 @@ class files {
       const token = useLoginState.getState().token;
       const resp = await fetchData({
         url: config.url,
-        path: "/view-file",
+        path: "/download-file",
         method: "POST",
         headers: {
           "Content-Type": "application/json",

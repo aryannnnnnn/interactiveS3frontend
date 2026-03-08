@@ -88,32 +88,49 @@ function Files() {
     }
   };
 
+  const viewFile = async (filename: string) => {
+    const resp = await filesProvider.viewFile({
+      bucketName: selectedBucket,
+      files: [
+        {
+          key: filename,
+        },
+      ],
+    });
+    if (resp.msg === "Success") {
+      resp.data.map((obj: any) => window.open(obj.url, "_blank"));
+    }
+  };
+
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
         <Breadcrumb>
-          <BreadcrumbList>
+          <BreadcrumbList className="flex flex-row">
             <BreadcrumbItem>
               <BreadcrumbList onClick={() => changeParent("")}>
                 {"/"}
               </BreadcrumbList>
             </BreadcrumbItem>
-            {prefix.split("/").map((item) => {
-              return (
-                <>
-                  <BreadcrumbSeparator />{" "}
-                  <BreadcrumbItem>
-                    <BreadcrumbLink
-                      onClick={() =>
-                        changeParent(`${prefix.split(item)[0]}${item}/`)
-                      }
-                    >
-                      {item}
-                    </BreadcrumbLink>
-                  </BreadcrumbItem>
-                </>
-              );
-            })}
+            {prefix
+              .split("/")
+              .filter(Boolean)
+              .map((item) => {
+                return (
+                  <span className="flex flex-row">
+                    <BreadcrumbSeparator />{" "}
+                    <BreadcrumbItem>
+                      <BreadcrumbLink
+                        onClick={() =>
+                          changeParent(`${prefix.split(item)[0]}${item}/`)
+                        }
+                      >
+                        {item}
+                      </BreadcrumbLink>
+                    </BreadcrumbItem>
+                  </span>
+                );
+              })}
           </BreadcrumbList>
         </Breadcrumb>
         <div>
@@ -155,11 +172,13 @@ function Files() {
                 <Download />
               </Button>
             </ItemActions>
-            <ItemActions>
-              <Button variant="ghost">
-                <View />
-              </Button>
-            </ItemActions>
+            {file.isPreviewable && (
+              <ItemActions>
+                <Button onClick={() => viewFile(file.name)} variant="ghost">
+                  <View />
+                </Button>
+              </ItemActions>
+            )}
             <ItemActions>
               <Button variant="ghost">
                 <Info />

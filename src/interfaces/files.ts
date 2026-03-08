@@ -3,4 +3,6 @@ export interface files {
   size: number;
   lastModified: string;
   owner: string;
+  isPreviewable: boolean;
+  fileType: string;
 }
