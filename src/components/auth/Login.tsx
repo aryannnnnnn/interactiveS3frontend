@@ -14,27 +14,30 @@ import { useLoginState } from "../../store/useLoginStore";
 import { useNavigate } from "react-router";
 import { useForm } from "react-hook-form";
 import type { ILogin } from "@/interfaces/login";
+import { useState } from "react";
 
 function Login() {
   const setToken = useStore(useLoginState, (state) => state.setToken);
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState<string>("");
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<ILogin>({});
 
   const submitCredentials = async (data: ILogin) => {
     try {
-      console.log(data);
+      setServerError("");
       const resp = await authProvider.getToken(data);
-      if (resp.token) {
-        console.log(resp.token);
+      if (resp?.token) {
         setToken(resp.token);
         navigate({ pathname: "/" });
+      } else {
+        setServerError(resp?.data ?? "Login failed. Check your credentials.");
       }
     } catch (e) {
-      console.error(e);
+      setServerError("Unable to connect to the server.");
     }
   };
 
@@ -71,8 +74,8 @@ function Login() {
               })}
               id="accessKey"
             />
-            {errors.secretAccessKey && (
-              <p className="text-red-500">{errors.secretAccessKey.message}</p>
+            {errors.accessToken && (
+              <p className="text-red-500">{errors.accessToken.message}</p>
             )}
             <Label htmlFor="region">Region</Label>
             <Input
@@ -96,11 +99,11 @@ function Login() {
             {errors.username && (
               <p className="text-red-500">{errors.username.message}</p>
             )}
-            <Button type="submit" className="w-full">
-              Login
+            <Button type="submit" className="w-full" disabled={isSubmitting}>
+              {isSubmitting ? "Connecting..." : "Login"}
             </Button>
-            {errors.root && (
-              <p className="text-red-500">{errors.root.message}</p>
+            {serverError && (
+              <p className="text-red-500 text-sm">{serverError}</p>
             )}
           </form>
         </CardContent>

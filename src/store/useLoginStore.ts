@@ -1,27 +1,21 @@
 import { create } from "zustand";
-import { combine } from "zustand/middleware";
+import { persist } from "zustand/middleware";
 
-export const useLoginState = create(
-  combine({ token: "", isLoggedIn: false }, (set) => {
-    return {
-      setToken: (newToken: string) => {
-        set(() => {
-          localStorage.setItem("token", newToken);
-          return {
-            token: newToken,
-            isLoggedIn: true,
-          };
-        });
-      },
-      unsetToken: () => {
-        set(() => {
-          localStorage.removeItem("token");
-          return {
-            token: "",
-            isLoggedIn: false,
-          };
-        });
-      },
-    };
-  }),
+type LoginState = {
+  token: string;
+  isLoggedIn: boolean;
+  setToken: (token: string) => void;
+  unsetToken: () => void;
+};
+
+export const useLoginState = create<LoginState>()(
+  persist(
+    (set) => ({
+      token: "",
+      isLoggedIn: false,
+      setToken: (token: string) => set({ token, isLoggedIn: true }),
+      unsetToken: () => set({ token: "", isLoggedIn: false }),
+    }),
+    { name: "login-storage" },
+  ),
 );

@@ -1,4 +1,5 @@
 import type { IRequest } from "@/interfaces/request";
+import { useLoginState } from "@/store/useLoginStore";
 const su = import.meta.env.VITE_BACKEND_URL;
 
 async function fetchData({
@@ -24,6 +25,13 @@ async function fetchData({
       url = `${url}?${new URLSearchParams(query as Record<string, string>).toString()}`;
     }
     const res = await fetch(url, options);
+
+    if (res.status === 401) {
+      useLoginState.getState().unsetToken();
+      window.location.href = "/login";
+      return;
+    }
+
     const data = await res.json();
     return data;
   } catch (e) {

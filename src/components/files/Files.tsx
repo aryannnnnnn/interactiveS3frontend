@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Fragment } from "react";
 import { useStore } from "zustand";
 import { useFileStore } from "@/store/useFileStore";
 import { filesProvider } from "@/services/files";
@@ -20,11 +20,13 @@ import {
 import { Button } from "../ui/button";
 import { Download, Folder, Trash, Info, View, RefreshCw } from "lucide-react";
 import { toast } from "sonner";
+import FileInfo from "./FileInfo";
 import {
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
+  BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/components/ui/breadcrumb";
 
@@ -41,6 +43,7 @@ function Files() {
   const [files, setFiles] = useState<files[] | null>();
   const [folders, setFolders] = useState<files[] | null>();
   const [getFilesTrriger, setGetFilesTrriger] = useState<boolean>(false);
+  const [infoFile, setInfoFile] = useState<files | null>(null);
 
   useEffect(() => {
     if (location.pathname === "/" && isLoggedIn) {
@@ -104,40 +107,49 @@ function Files() {
 
   return (
     <div className="flex flex-col gap-2">
-      <div className="flex justify-between">
+      <FileInfo
+        file={infoFile}
+        open={!!infoFile}
+        onOpenChange={(open) => { if (!open) setInfoFile(null); }}
+      />
+      <div className="flex items-center justify-between">
         <Breadcrumb>
-          <BreadcrumbList className="flex flex-row">
+          <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbList onClick={() => changeParent("")}>
-                {"/"}
-              </BreadcrumbList>
+              <BreadcrumbLink
+                className="cursor-pointer"
+                onClick={() => changeParent("")}
+              >
+                /
+              </BreadcrumbLink>
             </BreadcrumbItem>
             {prefix
               .split("/")
               .filter(Boolean)
-              .map((item) => {
-                return (
-                  <span className="flex flex-row">
-                    <BreadcrumbSeparator />{" "}
-                    <BreadcrumbItem>
+              .map((item, index, arr) => (
+                <Fragment key={`${item}-${index}`}>
+                  <BreadcrumbSeparator />
+                  <BreadcrumbItem>
+                    {index === arr.length - 1 ? (
+                      <BreadcrumbPage>{item}</BreadcrumbPage>
+                    ) : (
                       <BreadcrumbLink
+                        className="cursor-pointer"
                         onClick={() =>
                           changeParent(`${prefix.split(item)[0]}${item}/`)
                         }
                       >
                         {item}
                       </BreadcrumbLink>
-                    </BreadcrumbItem>
-                  </span>
-                );
-              })}
+                    )}
+                  </BreadcrumbItem>
+                </Fragment>
+              ))}
           </BreadcrumbList>
         </Breadcrumb>
-        <div>
-          <Button onClick={() => setGetFilesTrriger((state) => !state)}>
-            <RefreshCw />
-          </Button>
-        </div>
+        <Button variant="ghost" size="icon" onClick={() => setGetFilesTrriger((state) => !state)}>
+          <RefreshCw />
+        </Button>
       </div>
       {folders?.map((folder) => {
         return (
@@ -146,7 +158,10 @@ function Files() {
               <Folder />
             </ItemMedia>
             <ItemContent>
-              <ItemTitle onClick={() => changeParent(folder.name)}>
+              <ItemTitle
+                className="cursor-pointer hover:underline"
+                onClick={() => changeParent(folder.name)}
+              >
                 {folder.name.split("/").filter(Boolean).pop()}
               </ItemTitle>
             </ItemContent>
@@ -180,7 +195,7 @@ function Files() {
               </ItemActions>
             )}
             <ItemActions>
-              <Button variant="ghost">
+              <Button variant="ghost" onClick={() => setInfoFile(file)}>
                 <Info />
               </Button>
             </ItemActions>
